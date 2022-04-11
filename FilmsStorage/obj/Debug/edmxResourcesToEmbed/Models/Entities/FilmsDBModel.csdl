@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="FilmsStorageDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Genre">
+    <Key>
+      <PropertyRef Name="GenreID" />
+    </Key>
+    <Property Name="GenreID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GenreName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Films" Relationship="Self.FK_Film_Genre1" FromRole="Genre" ToRole="Film" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Login" Type="String" MaxLength="640" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Password" Type="Binary" MaxLength="64" FixedLength="true" Nullable="false" />
+    <Property Name="RegisteredAt" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="Films" Relationship="Self.FK_Film_User" FromRole="User" ToRole="Film" />
+  </EntityType>
+  <EntityType Name="Film">
+    <Key>
+      <PropertyRef Name="FilmID" />
+      <PropertyRef Name="FilmName" />
+      <PropertyRef Name="ReleaseYear" />
+      <PropertyRef Name="fk_GenreID" />
+      <PropertyRef Name="fk_UserID" />
+      <PropertyRef Name="FileName" />
+      <PropertyRef Name="FilePath" />
+    </Key>
+    <Property Name="FilmID" Type="Int64" Nullable="false" />
+    <Property Name="FilmName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ReleaseYear" Type="Int32" Nullable="false" />
+    <Property Name="fk_GenreID" Type="Int32" Nullable="false" />
+    <Property Name="fk_UserID" Type="Int32" Nullable="false" />
+    <Property Name="FileName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="FilePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="FilmDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Genre" Relationship="Self.FK_Film_Genre1" FromRole="Film" ToRole="Genre" />
+    <NavigationProperty Name="User" Relationship="Self.FK_Film_User" FromRole="Film" ToRole="User" />
+  </EntityType>
+  <Association Name="FK_Film_Genre1">
+    <End Role="Genre" Type="Self.Genre" Multiplicity="1" />
+    <End Role="Film" Type="Self.Film" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Genre">
+        <PropertyRef Name="GenreID" />
+      </Principal>
+      <Dependent Role="Film">
+        <PropertyRef Name="fk_GenreID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Film_User">
+    <End Role="User" Type="Self.User" Multiplicity="1" />
+    <End Role="Film" Type="Self.Film" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Film">
+        <PropertyRef Name="fk_UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="FilmsStorageDB" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Genres" EntityType="Self.Genre" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <EntitySet Name="Films" EntityType="Self.Film" />
+    <AssociationSet Name="FK_Film_Genre1" Association="Self.FK_Film_Genre1">
+      <End Role="Genre" EntitySet="Genres" />
+      <End Role="Film" EntitySet="Films" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Film_User" Association="Self.FK_Film_User">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Film" EntitySet="Films" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
