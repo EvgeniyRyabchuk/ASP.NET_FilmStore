@@ -43,7 +43,7 @@ namespace FilmsStorage.SL
 
                     for (int i = 0; i < sourceHash.Length; i++)
                     {
-                        if (sourceHash[i] != destinationHash[i])
+                        if (sourceHash[i] != destinationHash[i]) 
                         {
                             areHashedEqual = false;
                             break;
@@ -63,16 +63,16 @@ namespace FilmsStorage.SL
 
                 JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
 
-                string userDataJson = jsonSerializer.Serialize(userSerializationModel);
+                string userDataJson = jsonSerializer.Serialize(userSerializationModel); 
 
                 int cookieTimeOutMinutes = Convert.ToInt32(ConfigurationManager.AppSettings["LoginTimeout"]);
 
                 FormsAuthenticationTicket authTicket = new FormsAuthenticationTicket(
                     version: 1,
                     name: loggedInUser.Login,
-                    issueDate: DateTime.Now,
+                    issueDate: DateTime.Now, 
                     expiration: DateTime.Now.AddMinutes(cookieTimeOutMinutes),
-                    isPersistent: true,
+                    isPersistent: true, 
                     userData: userDataJson
                     );
 
@@ -83,7 +83,7 @@ namespace FilmsStorage.SL
                 //Cookie lifetime should be no longer than auth ticket lifetime
                 authCookie.Expires = authTicket.Expiration;
 
-                HttpContext.Current.Response.Cookies.Add(authCookie);
+                HttpContext.Current.Response.Cookies.Add(authCookie); 
             }
         }
 
