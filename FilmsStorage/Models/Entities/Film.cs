@@ -16,7 +16,7 @@ namespace FilmsStorage.Models.Entities
     {
         public long FilmID { get; set; }
         public string FilmName { get; set; }
-        public int ReleaseYear { get; set; }
+        public int ReleaseYear { get; set; } 
         public int fk_GenreID { get; set; }
         public int fk_UserID { get; set; }
         public string FileName { get; set; }

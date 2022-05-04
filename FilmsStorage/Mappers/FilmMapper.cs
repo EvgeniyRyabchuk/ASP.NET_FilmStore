@@ -22,5 +22,17 @@ namespace FilmsStorage.Mappers
                 FilmDescription = filmAddModel.FilmDescription
             };
         }
+        public static Film FromFilmToNewFilm(ref Film oldFilm, Film newFilm)
+        {
+            oldFilm.FilmName = newFilm.FilmName;
+            oldFilm.ReleaseYear = newFilm.ReleaseYear;
+            oldFilm.fk_GenreID = newFilm.fk_GenreID;
+            oldFilm.fk_UserID = newFilm.fk_UserID;
+            oldFilm.FileName = newFilm.FileName;
+            oldFilm.FilePath = newFilm.FilePath;
+            oldFilm.FilmDescription = newFilm.FilmDescription;
+            return oldFilm;
+        }
+
     }
 }

@@ -50,11 +50,29 @@ namespace FilmsStorage.DAL
                 using(var db = new FilmsStorageDB())
                 {
                     Film filmToAdd = FilmMapper.FromAddModel(addFilmModel);
-
-                    db.Films.Add(filmToAdd);
+         
+                     db.Films.Add(filmToAdd);
                     db.SaveChanges();
 
                     return filmToAdd;
+                } 
+            }
+            public static Film Update(Film updatedFilm)
+            {
+                using (FilmsStorageDB db = new FilmsStorageDB())
+                {
+                    Film filmByID = null; 
+                    var searchResults = db.Films.Where(f => f.FilmID == updatedFilm.FilmID);
+
+                    if (searchResults.Any())
+                    {
+                        filmByID = searchResults.First();
+                        // update 
+                        FilmMapper.FromFilmToNewFilm(ref filmByID, updatedFilm); 
+                    }
+
+                    db.SaveChanges();
+                    return updatedFilm;
                 }
             }
 
@@ -94,7 +112,7 @@ namespace FilmsStorage.DAL
                 return userFilms;
             }
 
-            public static Film FilmByID(int filmID)
+            public static Film FilmByID(long filmID)
             {
                 Film filmByID = null;
 
@@ -110,7 +128,7 @@ namespace FilmsStorage.DAL
                 return filmByID;
             }
 
-            public static v_Films ByID(int filmID)
+            public static v_Films ByID(long filmID)
             {
                 v_Films filmByID = null;
 

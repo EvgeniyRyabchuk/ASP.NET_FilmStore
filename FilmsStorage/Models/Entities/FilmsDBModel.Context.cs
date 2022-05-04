@@ -19,7 +19,7 @@ namespace FilmsStorage.Models.Entities
             : base("name=FilmsStorageDB")
         {
         }
-    
+        
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();
@@ -29,5 +29,6 @@ namespace FilmsStorage.Models.Entities
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Film> Films { get; set; }
         public virtual DbSet<v_Films> v_Films { get; set; }
+    
     }
 }

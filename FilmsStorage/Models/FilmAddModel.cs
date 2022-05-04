@@ -13,7 +13,7 @@ namespace FilmsStorage.Models
         public int ReleaseYear { get; set; }
         [Required]
         public int GenreID { get; set; }
-        public int UserID { get; set; }
+        public int UserID { get; set; } 
         [Required]
         public string FileName { get; set; }
         public string FilePath { get; set; }

@@ -75,7 +75,7 @@ namespace FilmsStorage.Controllers
             //TODO: Check if file belongs to current user
             //Potential approach - to use action filter
 
-            Film deletedFilm =_DAL.Films.Delete(id);
+            Film deletedFilm =_DAL.Films.Delete(id); 
 
             if(deletedFilm != null)
             {
@@ -115,21 +115,29 @@ namespace FilmsStorage.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(Film updatedFilm)
+        public ActionResult Edit(Film updatedFilmModel)
         {
-            //TODO: Protect from form manual edition
-
             if (ModelState.IsValid)
             {
-                //TODO: Завершити реалізацію методу Edit
-                //Подумати на тим як можна захистити проєкт від "угону" чужих файлів
+                // checkout if user is film owner
+                v_Films f = _DAL.Films.ByID(updatedFilmModel.FilmID);
+                if(f.UserID == CurrentUser.UserID)
+                {
+                    updatedFilmModel.fk_UserID = CurrentUser.UserID;
+                    _DAL.Films.Update(updatedFilmModel);
+                    return RedirectToAction("Index", "Account");
+                }
 
-                return RedirectToAction("Index", "Account");
+                TempData["Error"] = "You scam";
+
+                return View(updatedFilmModel);
             }
             else
             {
-                return View(updatedFilm);
+                TempData["Error"] = "Data is not valid";
+                return View(updatedFilmModel);
             }
+     
         }
 
         public ActionResult Details(int id)

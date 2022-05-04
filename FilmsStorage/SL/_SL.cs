@@ -101,7 +101,7 @@ namespace FilmsStorage.SL
                     {
                         //TODO: Resolve access not authorized Exception;
                         //
-                        File.Delete(filmToDelete.FilePath);
+                        File.Delete(filmToDelete.FilePath); 
 
                         fileDeleteResult = true;
                     }
