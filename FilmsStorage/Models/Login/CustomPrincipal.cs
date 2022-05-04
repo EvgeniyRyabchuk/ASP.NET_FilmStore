@@ -14,9 +14,9 @@ namespace FilmsStorage.Models.Login
             return false;
         }
 
-        public CustomPrincipal(string userName, int userID) 
+        public CustomPrincipal(string userName, int userID)
         {
-            Identity = new GenericIdentity(userName); 
+            Identity = new GenericIdentity(userName);
             UserID = userID;
         }
 

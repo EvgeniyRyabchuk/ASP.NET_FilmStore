@@ -89,18 +89,40 @@ namespace FilmsStorage.SL
 
         public static class Files
         {
-            private static FileSaveResult GetServerFilePath(string serverSaveFolder, string fileName, int id)
+            public static bool DeleteFilm(Film filmToDelete)
+            {
+                bool fileDeleteResult = false;
+
+                string fileFullPath = Path.Combine(filmToDelete.FilePath, filmToDelete.FileName);
+
+                if (File.Exists(fileFullPath))
+                {
+                    try
+                    {
+                        //TODO: Resolve access not authorized Exception;
+                        //
+                        File.Delete(filmToDelete.FilePath);
+
+                        fileDeleteResult = true;
+                    }
+                    catch 
+                    {}
+                }
+                return fileDeleteResult;
+            }
+
+            public static FileSaveResult SaveFilm(HttpPostedFileBase postedFile, int uploadedByUser)
             {
                 FileSaveResult fileUploadResult = new FileSaveResult();
-             
+
                 try
-                {   
-                    string fileSaveFolder = ConfigurationManager.AppSettings[serverSaveFolder];
+                {
+                    string fileSaveFolder = ConfigurationManager.AppSettings["FileUploadFolder"];
                     string webSiteFolder = HttpContext.Current.Server.MapPath("~");
 
                     string fileSaveRootFolder = Path.Combine(webSiteFolder, fileSaveFolder);
-                    string userSaveFolder = Path.Combine(fileSaveRootFolder, id.ToString());
-                    string fileSaveName = fileName;
+                    string userSaveFolder = Path.Combine(fileSaveRootFolder, uploadedByUser.ToString());
+                    string fileSaveName = postedFile.FileName;
 
                     if (!Directory.Exists(fileSaveRootFolder))
                     {
@@ -123,58 +145,20 @@ namespace FilmsStorage.SL
 
                     string fileSaveFullPath = Path.Combine(userSaveFolder, fileSaveName);
 
+                    postedFile.SaveAs(fileSaveFullPath);
 
                     fileUploadResult.isSaved = true;
                     fileUploadResult.FileName = fileSaveName;
                     fileUploadResult.FilePath = userSaveFolder;
-                    fileUploadResult.fullPath = fileSaveFullPath;
                 }
                 catch (Exception ex)
                 {
-                    throw ex; 
+
+                    fileUploadResult.Error = ex;
                 }
-                
-                return fileUploadResult;
-            }
-
-
-                public static FileSaveResult SaveFilm(HttpPostedFileBase postedFile, int uploadedByUser)
-                {
-                    FileSaveResult fileUploadResult = new FileSaveResult();
-
-                    try
-                    {
-                        fileUploadResult = Files.GetServerFilePath("FileUploadFolder", postedFile.FileName, uploadedByUser); 
-                        postedFile.SaveAs(fileUploadResult.fullPath);
-                    
-                    }
-                    catch (Exception ex)
-                    {
-                        fileUploadResult.Error = ex;
-                    }
 
                 return fileUploadResult;
             }
-
-            public static bool RemoveFIle(FileSaveResult fileUploadResult)
-            {
-                FileInfo file = new FileInfo(fileUploadResult.fullPath); 
-                
-                if (file.Exists) 
-                {
-                    file.Delete(); 
-                }
-                else
-                {
-                    fileUploadResult.Error = new Exception("File doesn't exist");
-                    return false;
-                }
-
-                return true; 
-            }
-            
-            
-
         }
     }
 }

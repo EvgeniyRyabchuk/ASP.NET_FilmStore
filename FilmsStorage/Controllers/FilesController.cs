@@ -3,6 +3,7 @@ using FilmsStorage.Models;
 using FilmsStorage.Models.Entities;
 using FilmsStorage.SL;
 using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 
 namespace FilmsStorage.Controllers
@@ -11,22 +12,26 @@ namespace FilmsStorage.Controllers
     public class FilesController : BaseController
     {
         // GET: Files By User
-        public PartialViewResult ByUser()
+        public PartialViewResult FilmsByUser()
         {
             //TODO: Get Files Of Given User
+            List<v_Films> userFilms = _DAL.Films.ByUser(CurrentUser.UserID);
 
-            return PartialView();
+            return PartialView(userFilms);
         }
-
-  
 
         //Show add file form
         public ViewResult Add()
         {
-            return View(FilmAddModel.getFilmModelTemplate());
+            FilmAddModel addFilmModel = new FilmAddModel();
+
+            addFilmModel.ReleaseYear = DateTime.Now.Year;
+            addFilmModel.Genres = _DAL.Genres.All();
+
+            return View(addFilmModel);
         }
 
-        [HttpPost] 
+        [HttpPost]
         public ActionResult Add(FilmAddModel addFilmModel)
         {
             if (Request.Files[0].ContentLength > 0)
@@ -35,32 +40,25 @@ namespace FilmsStorage.Controllers
 
                 if (fileInfo.isSaved)
                 {
-                    addFilmModel.UserID = CurrentUser.UserID; 
+                    addFilmModel.UserID = CurrentUser.UserID;
                     addFilmModel.FilePath = fileInfo.FilePath;
                     addFilmModel.FileName = fileInfo.FileName;
 
                     Film addedFilm = _DAL.Films.Add(addFilmModel);
-                    //addedFilm.FilmID = 0; 
+
                     //if film added
-                    if (addedFilm.FilmID > 0)
+                    if(addedFilm.FilmID > 0)
                     {
-                        return RedirectToAction("Index", "Account"); 
+                        return RedirectToAction("Index", "Account");
                     }
                     else
                     {
-                        if(!_SL.Files.RemoveFIle(fileInfo))
-                        {
-                            ViewBag.ErrorMsg = fileInfo.Error;
-                        }
-                        else
-                        {
-                            ViewBag.ErrorMsg = "File does'n saved";
-                        }
-        
+                        //TODO: Delete file
+                        //TODO: Show Error
                     }
-                } 
+                }
 
-                return View(FilmAddModel.getFilmModelTemplate());
+                return View(addFilmModel);
             }
             else
             {
@@ -68,7 +66,87 @@ namespace FilmsStorage.Controllers
 
                 addFilmModel.Genres = _DAL.Genres.All();
 
-                return View(FilmAddModel.getFilmModelTemplate());
+                return View(addFilmModel);
+            }
+        }
+
+        public RedirectToRouteResult Delete(int id)
+        {
+            //TODO: Check if file belongs to current user
+            //Potential approach - to use action filter
+
+            Film deletedFilm =_DAL.Films.Delete(id);
+
+            if(deletedFilm != null)
+            {
+                bool isFlmDeleted = _SL.Files.DeleteFilm(deletedFilm);
+
+                if (!isFlmDeleted)
+                {
+                    TempData["Error"] = "Error deliting Film file from file system";
+                }
+            }
+            else
+            {
+                TempData["Error"] = "No such file to delete";
+            }
+
+            return RedirectToAction("Index", "Account"); 
+        }
+
+        public ActionResult Edit(int id)
+        {
+            //TODO: Check if file belongs to current user
+
+            var filmByID = _DAL.Films.FilmByID(id);
+
+            if (filmByID != null)
+            {
+                ViewData["Genres"] = _DAL.Genres.All();
+
+                return View(filmByID);
+            }
+            else
+            {
+                TempData["Error"] = "No such film";
+
+                return RedirectToAction("Index", "Account");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Edit(Film updatedFilm)
+        {
+            //TODO: Protect from form manual edition
+
+            if (ModelState.IsValid)
+            {
+                //TODO: Завершити реалізацію методу Edit
+                //Подумати на тим як можна захистити проєкт від "угону" чужих файлів
+
+                return RedirectToAction("Index", "Account");
+            }
+            else
+            {
+                return View(updatedFilm);
+            }
+        }
+
+        public ActionResult Details(int id)
+        {
+            //TODO: Check if file belongs to current user
+
+            var filmByID = _DAL.Films.ByID(id);
+
+            if(filmByID != null)
+            {
+                return View(filmByID);
+            }
+            else
+            {
+                TempData["Error"] = "No such film";
+
+                return RedirectToAction("Index", "Account");
             }
         }
     }

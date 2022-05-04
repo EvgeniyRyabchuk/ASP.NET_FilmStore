@@ -31,6 +31,7 @@
       <End Role="User" EntitySet="Users" />
       <End Role="Film" EntitySet="Films" />
     </AssociationSet>
+    <EntitySet Name="v_Films" EntityType="FilmsStorageDBModel.v_Films" />
   </EntityContainer>
   <EntityType Name="Film">
     <Key>
@@ -71,4 +72,24 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="v_Films">
+    <Key>
+      <PropertyRef Name="FilmID" />
+      <PropertyRef Name="FilmName" />
+      <PropertyRef Name="FileName" />
+      <PropertyRef Name="FilePath" />
+      <PropertyRef Name="ReleaseYear" />
+      <PropertyRef Name="UserID" />
+      <PropertyRef Name="GenreID" />
+    </Key>
+    <Property Name="FilmID" Type="Int64" Nullable="false" />
+    <Property Name="FilmName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="FileName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="FilePath" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="FilmDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ReleaseYear" Type="Int32" Nullable="false" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="GenreID" Type="Int32" Nullable="false" />
+    <Property Name="GenreName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+  </EntityType>
 </Schema>

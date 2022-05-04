@@ -15,7 +15,7 @@ namespace FilmsStorage.Mappers
             return new User()
             {
                 UserName = registerModel.UserName,
-                Login = registerModel.LoginName, 
+                Login = registerModel.LoginName,
                 // TODO: rework to create hash outside
                 Password = _SL.Hasher.createHash(registerModel.Password)
             };

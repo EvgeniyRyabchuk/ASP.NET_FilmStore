@@ -7,15 +7,12 @@
 
     foreach (var genre in Model.Genres)
     {
-        genresSelectedListItems.Add(new SelectListItem { Value = genre.GenreID.ToString(), Text = genre.GenreName }); 
+        genresSelectedListItems.Add(new SelectListItem { Value = genre.GenreID.ToString(), Text = genre.GenreName });
     }
 
 }
 
 <h2>Upload Movie</h2>
-
-
-<h3 style="color: red;">@ViewBag.ErrorMsg</h3>
 
 @using (Html.BeginForm(
     actionName: "Add",

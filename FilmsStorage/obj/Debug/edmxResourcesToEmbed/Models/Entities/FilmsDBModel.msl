@@ -34,5 +34,20 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="v_Films">
+      <EntityTypeMapping TypeName="FilmsStorageDBModel.v_Films">
+        <MappingFragment StoreEntitySet="v_Films">
+          <ScalarProperty Name="GenreName" ColumnName="GenreName" />
+          <ScalarProperty Name="GenreID" ColumnName="GenreID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="ReleaseYear" ColumnName="ReleaseYear" />
+          <ScalarProperty Name="FilmDescription" ColumnName="FilmDescription" />
+          <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+          <ScalarProperty Name="FileName" ColumnName="FileName" />
+          <ScalarProperty Name="FilmName" ColumnName="FilmName" />
+          <ScalarProperty Name="FilmID" ColumnName="FilmID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

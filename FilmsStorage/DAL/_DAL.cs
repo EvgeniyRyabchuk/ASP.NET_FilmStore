@@ -57,6 +57,74 @@ namespace FilmsStorage.DAL
                     return filmToAdd;
                 }
             }
+
+            public static Film Delete(int filmID)
+            {
+                Film deletedFile = null;
+
+                using (var db = new FilmsStorageDB())
+                {
+                    var searchResult = db.Films.Where(f => f.FilmID == filmID);
+
+                    if (searchResult.Any())
+                    {
+                        Film filmToDelete = searchResult.First();
+
+                        deletedFile = db.Films.Remove(filmToDelete);
+                        db.SaveChanges();
+                    }
+                }
+
+                return deletedFile;
+            }
+
+            public static List<v_Films> ByUser(int userID)
+            {
+                List<v_Films> userFilms = new List<v_Films>();
+
+                using (var db = new FilmsStorageDB())
+                {
+                    var searchResults = db.v_Films.Where(f => f.UserID == userID);
+
+                    if (searchResults.Any())
+                    {
+                        userFilms = searchResults.ToList();
+                    }
+                }
+                return userFilms;
+            }
+
+            public static Film FilmByID(int filmID)
+            {
+                Film filmByID = null;
+
+                using (var db = new FilmsStorageDB())
+                {
+                    var searchResults = db.Films.Where(f => f.FilmID == filmID);
+
+                    if (searchResults.Any())
+                    {
+                        filmByID = searchResults.First();
+                    }
+                }
+                return filmByID;
+            }
+
+            public static v_Films ByID(int filmID)
+            {
+                v_Films filmByID = null;
+
+                using (var db = new FilmsStorageDB())
+                {
+                    var searchResults = db.v_Films.Where(f => f.FilmID == filmID);
+
+                    if (searchResults.Any())
+                    {
+                        filmByID = searchResults.First();
+                    }
+                }
+                return filmByID;
+            }
         }
 
         public static class Genres
