@@ -23,14 +23,14 @@
     <EntitySetMapping Name="Films">
       <EntityTypeMapping TypeName="FilmsStorageDBModel.Film">
         <MappingFragment StoreEntitySet="Film">
-          <ScalarProperty Name="FilmID" ColumnName="FilmID" />
-          <ScalarProperty Name="FilmName" ColumnName="FilmName" />
-          <ScalarProperty Name="ReleaseYear" ColumnName="ReleaseYear" />
-          <ScalarProperty Name="fk_GenreID" ColumnName="fk_GenreID" />
-          <ScalarProperty Name="fk_UserID" ColumnName="fk_UserID" />
-          <ScalarProperty Name="FileName" ColumnName="FileName" />
-          <ScalarProperty Name="FilePath" ColumnName="FilePath" />
           <ScalarProperty Name="FilmDescription" ColumnName="FilmDescription" />
+          <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+          <ScalarProperty Name="FileName" ColumnName="FileName" />
+          <ScalarProperty Name="fk_UserID" ColumnName="fk_UserID" />
+          <ScalarProperty Name="fk_GenreID" ColumnName="fk_GenreID" />
+          <ScalarProperty Name="ReleaseYear" ColumnName="ReleaseYear" />
+          <ScalarProperty Name="FilmName" ColumnName="FilmName" />
+          <ScalarProperty Name="FilmID" ColumnName="FilmID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

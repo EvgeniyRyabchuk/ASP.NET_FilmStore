@@ -1,18 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="FilmsStorageDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-  <!--Errors Found During Generation:
-warning 6002: The table/view 'FilmsStorageDB.dbo.Film' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
   <EntityType Name="Film">
     <Key>
       <PropertyRef Name="FilmID" />
-      <PropertyRef Name="FilmName" />
-      <PropertyRef Name="ReleaseYear" />
-      <PropertyRef Name="fk_GenreID" />
-      <PropertyRef Name="fk_UserID" />
-      <PropertyRef Name="FileName" />
-      <PropertyRef Name="FilePath" />
     </Key>
-    <Property Name="FilmID" Type="bigint" Nullable="false" />
+    <Property Name="FilmID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="FilmName" Type="nvarchar" MaxLength="500" Nullable="false" />
     <Property Name="ReleaseYear" Type="int" Nullable="false" />
     <Property Name="fk_GenreID" Type="int" Nullable="false" />
@@ -26,7 +18,7 @@ warning 6002: The table/view 'FilmsStorageDB.dbo.Film' does not have a primary k
       <PropertyRef Name="GenreID" />
     </Key>
     <Property Name="GenreID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="GenreName" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="GenreName" Type="nvarchar" MaxLength="500" />
   </EntityType>
   <EntityType Name="User">
     <Key>
@@ -38,7 +30,7 @@ warning 6002: The table/view 'FilmsStorageDB.dbo.Film' does not have a primary k
     <Property Name="Password" Type="binary" MaxLength="64" Nullable="false" />
     <Property Name="RegisteredAt" Type="datetime" Nullable="false" />
   </EntityType>
-  <Association Name="FK_Film_Genre1">
+  <Association Name="FK_Film_Genre">
     <End Role="Genre" Type="Self.Genre" Multiplicity="1" />
     <End Role="Film" Type="Self.Film" Multiplicity="*" />
     <ReferentialConstraint>
@@ -63,21 +55,10 @@ warning 6002: The table/view 'FilmsStorageDB.dbo.Film' does not have a primary k
     </ReferentialConstraint>
   </Association>
   <EntityContainer Name="FilmsStorageDBModelStoreContainer">
+    <EntitySet Name="Film" EntityType="Self.Film" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Genre" EntityType="Self.Genre" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="Film" EntityType="Self.Film" store:Type="Tables" store:Schema="dbo">
-      <DefiningQuery>SELECT 
-    [Film].[FilmID] AS [FilmID], 
-    [Film].[FilmName] AS [FilmName], 
-    [Film].[ReleaseYear] AS [ReleaseYear], 
-    [Film].[fk_GenreID] AS [fk_GenreID], 
-    [Film].[fk_UserID] AS [fk_UserID], 
-    [Film].[FileName] AS [FileName], 
-    [Film].[FilePath] AS [FilePath], 
-    [Film].[FilmDescription] AS [FilmDescription]
-    FROM [dbo].[Film] AS [Film]</DefiningQuery>
-    </EntitySet>
-    <AssociationSet Name="FK_Film_Genre1" Association="Self.FK_Film_Genre1">
+    <AssociationSet Name="FK_Film_Genre" Association="Self.FK_Film_Genre">
       <End Role="Genre" EntitySet="Genre" />
       <End Role="Film" EntitySet="Film" />
     </AssociationSet>

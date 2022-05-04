@@ -1,0 +1,15 @@
+﻿@model FilmsStorage.Models.Entities.User
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="text-center">
+    <h3>Your Profile</h3>
+
+    <p>Hello <b>@Model.UserName</b>!</p>
+</div>
+
+<h3>Your Files: </h3>
+
+@{ Html.RenderPartial("SocialLinks");}

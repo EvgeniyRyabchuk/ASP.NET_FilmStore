@@ -33,7 +33,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.PasswordFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -41,7 +41,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PasswordRepetition, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.PasswordFor(model => model.PasswordRepetition, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.PasswordFor(model => model.PasswordRepetition, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.PasswordRepetition, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -62,21 +62,15 @@
 @if (!string.IsNullOrEmpty(Model.Password))
 {
     <script>
-
         const pass = document.querySelector("#Password");
-
         pass.value = "@Model.Password";
-
     </script>
 }
 
 @if (!string.IsNullOrEmpty(Model.PasswordRepetition))
 {
     <script>
-
-        const passRepet = document.querySelector("#PasswordRepetition");
-
-        passRepet.value = "@Model.PasswordRepetition";
-
+        const passRep = document.querySelector("#PasswordRepetition");
+        passRep.value = "@Model.PasswordRepetition";
     </script>
 }

@@ -1,31 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using FilmsStorage.DAL;
+using FilmsStorage.Mappers;
+using FilmsStorage.Models;
+using FilmsStorage.Models.Entities;
+using FilmsStorage.SL;
+using System;
 using System.Web.Mvc;
 using System.Web.Security;
-
-using FilmsStorage.Models;
-using FilmsStorage.DAL;
-using FilmsStorage.Models.Entities;
-using FilmsStorage.Mappers;
-using FilmsStorage.SL;
 
 namespace FilmsStorage.Controllers
 {
     public class AccountController : Controller
     {
-        // Это личный профиль пользователя. Разрешение на вход по логину
+        // Особистий профіль користувача. Дозвіл на вхід за логіном
         [Authorize]
-        //Фильтр Autorize требует чтобы пользователь был залогинен
-        //TODO: Заменить штатный фильтр на собственный
+        // Фільтр вимагає щоб користувач був залогінений
+        // TODO: Замінити штатний фільтр на свій
         public ViewResult Index()
         {
-            return View();
+            string userLoginName = User.Identity.Name;
+
+            User userDetails = _DAL.Users.ByLogin(userLoginName);
+
+            return View(userDetails);
         }
 
         #region Login
-        //Окно логина
+        // Вікно логіну
         public ViewResult Login()
         {
             return View(new LoginModel());
@@ -37,10 +37,10 @@ namespace FilmsStorage.Controllers
         {
             if (ModelState.IsValid)
             {
-                //Проверим есть ли данный пользователь в базе
+                // Перевіряємо наявність користувача в базі
                 User registeredUser = _DAL.Users.ByLogin(loginModel.LoginName);
 
-                //If such user registered
+                //if user registered
                 if (registeredUser != null)
                 {
                     //Password check
@@ -51,23 +51,22 @@ namespace FilmsStorage.Controllers
                         _SL.Cookies.SetLoginCookie(registeredUser);
 
                         return RedirectToAction("Index", "Account");
-                        //TODO: create login cookie
                     }
                     else
                     {
-                        ViewBag.ErrorMsg = "Wrong password";
+                        ViewBag.ErrorMsg = "Wrong Password";
                         return View();
                     }
                 }
                 else
                 {
-                    ViewBag.ErrorMsg = "No such user";
+                    ViewBag.ErrorMsg = "No Such User";
                     return View();
                 }
             }
             else
             {
-                ViewBag.ErrorMsg = "Invalid login form";
+                ViewBag.ErrorMsg = "Invalid Login Form";
                 return View();
             }
         }
@@ -81,47 +80,49 @@ namespace FilmsStorage.Controllers
         }
 
         #region Register
-        //Окно регистрации
+        // Вікно реєстрації
         public ViewResult Register()
         {
             return View(new RegisterModel());
         }
-
-        //Метод-обработчик формы регистрации
+        
+        // Метод-обробник форми реєстрації
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Register(RegisterModel registerModel)
         {
             if (ModelState.IsValid)
             {
-                //Проверим есть ли данный пользователь в базе
+                // Перевіримо чи є даний користувач в базі
                 User registerUser = _DAL.Users.ByLogin(registerModel.LoginName);
 
-                //Такого пользователя ещё нет - можно регистрировать
-                if (registerUser == null)
+                // Такого користувача немає - можна додавати
+                if(registerUser == null)
                 {
                     User userRegisterEntity = UserMapper.FromRegisterModel(registerModel);
                     userRegisterEntity.RegisteredAt = DateTime.Now;
 
                     User registeredUser = _DAL.Users.Register(userRegisterEntity);
 
-                    //TODO //create login cookie
+                    // TODO:  create login cookie
                     return RedirectToAction("Index", "Account");
                 }
                 else
                 {
                     ViewBag.ErrorMsg = $"User {registerModel.LoginName} is already registered";
-
+                    
                     return View(registerModel);
                 }
             }
             else
             {
-                //Ошибки в форме регистрации
-                ViewBag.ErrorMsg = "Invalid register form";
+                //Помилки у формі реєстрації
+                ViewBag.ErrorMsg = "Invalid Register Form";
                 return View(registerModel);
             }
         }
-        #endregion
+        #endregion 
+
+
     }
 }
