@@ -7,7 +7,6 @@ using System.Configuration;
 using System;
 using System.Web.Security;
 using System.Web;
-using System.Configuration;
 using System.IO;
 
 namespace FilmsStorage.SL
@@ -95,7 +94,7 @@ namespace FilmsStorage.SL
 
                 string fileFullPath = Path.Combine(filmToDelete.FilePath, filmToDelete.FileName);
 
-                if (File.Exists(fileFullPath))
+                if (File.Exists(fileFullPath)) 
                 {
                     try
                     {

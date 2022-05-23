@@ -6,6 +6,7 @@ using System.Web;
 using FilmsStorage.Models.Entities;
 using FilmsStorage.Models;
 using FilmsStorage.Mappers;
+using System.Data.Entity;
 
 namespace FilmsStorage.DAL
 {
@@ -76,6 +77,34 @@ namespace FilmsStorage.DAL
                 }
             }
 
+            public static Film Edit(Film updatedFilm)
+            {
+                Film editedFile = null;
+
+                using (var db = new FilmsStorageDB())
+                {
+                    var searchResults = db.Films.Where(f => f.FilmID == updatedFilm.FilmID);
+
+                    if (searchResults.Any())
+                    {
+                        editedFile = searchResults.First();
+
+                        editedFile.FilmName = updatedFilm.FilmName;
+                        editedFile.ReleaseYear = updatedFilm.ReleaseYear;
+                        editedFile.fk_GenreID = updatedFilm.fk_GenreID; 
+                        editedFile.fk_UserID = updatedFilm.fk_UserID;
+                        editedFile.FileName = updatedFilm.FileName;
+                        editedFile.FilePath = updatedFilm.FilePath;
+                        editedFile.FilmDescription = updatedFilm.FilmDescription;
+
+                        db.SaveChanges();
+                    }
+
+                    return updatedFilm;
+                }
+            }
+
+
             public static Film Delete(int filmID)
             {
                 Film deletedFile = null;
@@ -134,6 +163,10 @@ namespace FilmsStorage.DAL
 
                 using (var db = new FilmsStorageDB())
                 {
+                    //Turn LazyLoading off to allow JSON serialization
+                    //DB Record will be returned immediately
+                    db.Configuration.LazyLoadingEnabled = false;
+
                     var searchResults = db.v_Films.Where(f => f.FilmID == filmID);
 
                     if (searchResults.Any())

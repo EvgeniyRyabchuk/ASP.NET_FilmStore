@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<FilmsStorage.Models.Entities.v_Films>
 
 <p>
-    @Html.ActionLink("Upload New", "Add")
+    @Html.ActionLink(FilmsStorage.Resources.Views.Account.FilmsByUser.UploadNew, "Add", "Files", null, new { @class = "btn btn-warning" })
 </p>
 <table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.FilmName)
-        </th>   
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.FilmDescription)
         </th>
@@ -20,26 +20,79 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>      
-        <td>
-            @Html.DisplayFor(modelItem => item.FilmName)
-        </td>     
-        <td>
-            @Html.DisplayFor(modelItem => item.FilmDescription)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReleaseYear)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GenreName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit Film", "Edit", "Files", new { id=item.FilmID }, new {@class ="btn btn-warning"}) |
-            @Html.ActionLink("Film Details", "Details", "Files", new { id = item.FilmID }, new { @class = "btn btn-info" }) |
-            @Html.ActionLink("Delete Film", "Delete", "Files", new { id = item.FilmID }, new { @class = "btn btn-danger" })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FilmName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FilmDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReleaseYear)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GenreName)
+            </td>
+            <td>
+                @Html.ActionLink(FilmsStorage.Resources.Views.Account.FilmsByUser.EditFilm, "Edit", "Files", new { id = item.FilmID }, new { @class = "btn btn-success" }) |
+                <button data-filmId="@item.FilmID" class="btn btn-info filmDetailsBtn">@FilmsStorage.Resources.Views.Account.FilmsByUser.Details</button> |
+                @Html.ActionLink(FilmsStorage.Resources.Views.Account.FilmsByUser.DeleteFilm, "Delete", "Files", new { fileID = item.FilmID, userID = item.UserID }, new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+    }
 
 </table>
+
+<div class="modal" id="filmDetailsPopUp" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@FilmsStorage.Resources.Views.Account.FilmsByUser.Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <label for="detailsFilmNameTxt">@FilmsStorage.Resources.Views.Account.FilmsByUser.FilmName: </label>
+                <input type="text" id="detailsFilmNameTxt" class="form-control" />
+
+                <label for="detailsFileNameTxt">@FilmsStorage.Resources.Views.Account.FilmsByUser.FileName: </label>
+                <input type="text" id="detailsFileNameTxt" class="form-control" />
+
+                <label for="detailsFilePathTxt">@FilmsStorage.Resources.Views.Account.FilmsByUser.FilePath: </label>
+                <input type="text" id="detailsFilePathTxt" class="form-control" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@FilmsStorage.Resources.Views.Account.FilmsByUser.Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    const filmDetailPopUp = new bootstrap.Modal('#filmDetailsPopUp');
+
+    $('.filmDetailsBtn').click(function () {
+
+        const filmID = this.dataset.filmid;
+
+        $.get(
+            "/uk/files/Details4Js",
+            { fileID: filmID }
+        ).done(function (data) {
+            if (data) {
+
+                $('#detailsFilmNameTxt').val(data.FilmName);
+                $('#detailsFileNameTxt').val(data.FileName);
+                $('#detailsFilePathTxt').val(data.FilePath);
+
+                filmDetailPopUp.show();
+            }
+        }).fail(function (error) {
+            console.log(error.responseText)
+        });
+    });   
+
+</script>
