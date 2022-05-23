@@ -1,9 +1,11 @@
 ﻿using FilmsStorage.DAL;
+using FilmsStorage.Filters;
 using FilmsStorage.Models;
 using FilmsStorage.Models.Entities;
 using FilmsStorage.SL;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Web.Mvc;
 
 namespace FilmsStorage.Controllers
@@ -32,6 +34,7 @@ namespace FilmsStorage.Controllers
         }
 
         [HttpPost]
+        [LogIt("File added")]
         public ActionResult Add(FilmAddModel addFilmModel)
         {
             if (Request.Files[0].ContentLength > 0)
@@ -41,7 +44,7 @@ namespace FilmsStorage.Controllers
                 if (fileInfo.isSaved)
                 {
                     addFilmModel.UserID = CurrentUser.UserID;
-                    addFilmModel.FilePath = fileInfo.FilePath;
+                    addFilmModel.FilePath = fileInfo.FilePath; 
                     addFilmModel.FileName = fileInfo.FileName;
 
                     Film addedFilm = _DAL.Films.Add(addFilmModel);
@@ -70,16 +73,16 @@ namespace FilmsStorage.Controllers
             }
         }
 
-        public RedirectToRouteResult Delete(int id)
+        public RedirectToRouteResult Delete(int fileID, int userID)
         {
             //TODO: Check if file belongs to current user
             //Potential approach - to use action filter
 
-            Film deletedFilm =_DAL.Films.Delete(id); 
+            Film deletedFilm =_DAL.Films.Delete(fileID);
 
             if(deletedFilm != null)
             {
-                bool isFlmDeleted = _SL.Files.DeleteFilm(deletedFilm);
+                bool isFlmDeleted = _SL.Files.DeleteFilm(deletedFilm); 
 
                 if (!isFlmDeleted)
                 {
@@ -88,12 +91,13 @@ namespace FilmsStorage.Controllers
             }
             else
             {
-                TempData["Error"] = "No such file to delete";
+                TempData["Error"] = "No such file to delete"; 
             }
 
             return RedirectToAction("Index", "Account"); 
         }
 
+        [LogIt("Show file edit view")]
         public ActionResult Edit(int id)
         {
             //TODO: Check if file belongs to current user
@@ -115,10 +119,13 @@ namespace FilmsStorage.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(Film updatedFilmModel)
+
         {
             if (ModelState.IsValid)
             {
+
                 // checkout if user is film owner
                 v_Films f = _DAL.Films.ByID(updatedFilmModel.FilmID);
                 if(f.UserID == CurrentUser.UserID)
@@ -136,6 +143,7 @@ namespace FilmsStorage.Controllers
             {
                 TempData["Error"] = "Data is not valid";
                 return View(updatedFilmModel);
+
             }
      
         }
@@ -156,6 +164,14 @@ namespace FilmsStorage.Controllers
 
                 return RedirectToAction("Index", "Account");
             }
+        }
+
+        public JsonResult Details4Js(int fileID)
+        {
+            var filmByID = _DAL.Films.ByID(fileID);
+
+            //Note: don't use JsonRequestBehavior.AllowGet at prod!
+            return Json(filmByID, JsonRequestBehavior.AllowGet);
         }
     }
 }
