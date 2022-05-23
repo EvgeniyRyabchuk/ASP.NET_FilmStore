@@ -95,7 +95,7 @@ namespace FilmsStorage.SL
 
                 string fileFullPath = Path.Combine(filmToDelete.FilePath, filmToDelete.FileName);
 
-                if (File.Exists(fileFullPath))
+                if (File.Exists(fileFullPath)) 
                 {
                     try
                     {
