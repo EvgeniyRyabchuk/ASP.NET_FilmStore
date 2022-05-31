@@ -141,13 +141,14 @@ namespace FilmsStorage.DAL
                 return userFilms;
             }
 
+
             public static Film FilmByID(long filmID)
             {
                 Film filmByID = null;
 
                 using (var db = new FilmsStorageDB())
                 {
-                    var searchResults = db.Films.Where(f => f.FilmID == filmID);
+                    var searchResults = db.Films.Where(f => f.FilmID == filmID); 
 
                     if (searchResults.Any())
                     {
